@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="container-fluid" style="padding-top: 80px;">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 sidebar animate-slide-in">
+            <div class="position-sticky">
+                <div class="text-center py-4">
+                    <i class="fas fa-user-circle text-white" style="font-size: 4rem;"></i>
+                    <h5 class="text-white mt-2">{{ current_user.full_name }}</h5>
+                    <p class="text-white-50">Patient</p>
+                </div>
+                
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('user_dashboard') }}">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('braintumor_predict') }}">
+                            <i class="fas fa-heartbeat me-2"></i>Brain Tumor Analysis
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('user_report_data') }}">
+                            <i class="fas fa-file-medical me-2"></i>My Reports
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('user_appointments') }}">
+                            <i class="fas fa-calendar-check me-2"></i>Appointments
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('book_appointment') }}">
+                            <i class="fas fa-plus-circle me-2"></i>Book Appointment
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+<main class="prediction-main col-md-9 ms-sm-auto col-lg-10 px-md-4 animate-slide-in" role="main">
+  <h1 class="page-title" aria-label="Brain Tumor Analysis">
+    <i class="fas fa-heartbeat" aria-hidden="true"></i> Brain Tumor Analysis
+  </h1>
+
+  <div class="card shadow-sm">
+    <div class="card-header">Upload Brain Tumor MRI Image for Analysis</div>
+    <form method="POST" action="{{ url_for('braintumor_predict') }}" enctype="multipart/form-data" id="braintumor-form" novalidate>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="patient_name" name="patient_name" placeholder="Patient Name" required />
+            <label for="patient_name">Patient Name</label>
+          </div>
+
+          <div class="form-floating mt-4">
+            <input type="number" class="form-control" id="patient_age" name="patient_age" min="1" max="120" placeholder="Patient Age" required />
+            <label for="patient_age">Patient Age</label>
+          </div>
+
+          <div class="form-floating mt-4">
+            <select class="form-select" id="patient_gender" name="patient_gender" required>
+              <option value="" disabled selected></option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+            <label for="patient_gender">Patient Gender</label>
+          </div>
+
+          <div class="form-floating mt-4">
+            <input type="text" class="form-control" id="patient_id" name="patient_id" placeholder="Patient ID Generate Automatically by the system" value="{{ patient_id }}" readonly />
+            <label for="patient_id">Patient ID</label>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="doctor_name" name="doctor_name" placeholder="Referring Doctor" required />
+            <label for="doctor_name">Referring Doctor</label>
+          </div>
+
+          <div class="form-floating mt-4">
+            <select class="form-select" id="doctor_type" name="doctor_type" required>
+              <option value="" disabled selected></option>
+              <option>Cardiologist</option>
+              <option>Neurologist</option>
+              <option>Radiologist</option>
+              <option>Pulmonologist</option>
+              <option>Oncologist</option>
+              <option>General Physician</option>
+              <option>Emergency Medicine</option>
+              <option>Internal Medicine</option>
+              <option>Pediatrician</option>
+              <option>Dermatologist</option>
+              <option>Orthopedic</option>
+              <option>Psychiatrist</option>
+              <option>Gynecologist</option>
+              <option>ENT Specialist</option>
+            </select>
+            <label for="doctor_type">Doctor Specialty</label>
+          </div>
+
+          <div class="form-floating mt-4">
+            <textarea class="form-control" id="patient_symptoms" name="patient_symptoms" placeholder="Patient Symptoms" required></textarea>
+            <label for="patient_symptoms">Patient Symptoms</label>
+          </div>
+
+          <div class="mt-5">
+            <label for="file" class="form-label mb-2" style="color:#004a99; font-weight:700; font-size:1.15rem;">Brain Tumor Image</label>
+            <label for="file" class="upload-box" id="uploadBox" tabindex="0" aria-label="Upload Brain Tumor image by clicking or drag and drop">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+                <path d="M44 12H20a4 4 0 0 0-4 4v32a4 4 0 0 0 4 4h24a4 4 0 0 0 4-4V16a4 4 0 0 0-4-4Zm-2 34H22V18h20Zm-10-6a6 6 0 1 1 0-12 6 6 0 0 1 0 12Z"/>
+              </svg>
+              <p><strong>Click or Drag & Drop</strong></p>
+              <p class="subtext">Upload Brain Tumor Image (JPG, PNG)</p>
+              <input type="file" id="file" name="file" accept="image/*" required />
+            </label>
+            <div class="preview" id="preview" aria-live="polite" aria-atomic="true"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-5">
+        <button type="submit" class="btn btn-primary btn-lg px-5" aria-label="Analyze Brain Tumor">
+          <i class="fas fa-upload me-2"></i>Analyze Brain Tumor
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
+
+    </div>
+</div>
+
+<!-- Loading Spinner -->
+<div id="loading-spinner" class="position-fixed top-50 start-50 translate-middle" style="display: none; z-index: 1050;">
+    <div class="text-center">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Analyzing your Brain Tumor image, please wait...</p>
+    </div>
+</div>
+
+<div id="loading-overlay" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50" style="display: none; z-index: 1040;"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const uploadBox = document.getElementById('uploadBox');
+  const fileInput = document.getElementById('file');
+  const preview = document.getElementById('preview');
+
+  uploadBox.addEventListener('dragover', e => {
+    e.preventDefault();
+    uploadBox.classList.add('dragover');
+  });
+  uploadBox.addEventListener('dragleave', () => {
+    uploadBox.classList.remove('dragover');
+  });
+  uploadBox.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadBox.classList.remove('dragover');
+    if (e.dataTransfer.files.length) {
+      fileInput.files = e.dataTransfer.files;
+      previewImage(fileInput.files[0]);
+    }
+  });
+
+  uploadBox.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      fileInput.click();
+    }
+  });
+
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files.length) previewImage(fileInput.files[0]);
+  });
+
+  function previewImage(file) {
+    preview.innerHTML = '';
+    if (!file) return;
+
+    if (file.size > 20 * 1024 * 1024) {
+      alert('File size exceeds 20MB limit.');
+      fileInput.value = '';
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      alert('Unsupported file format. Please upload an image.');
+      fileInput.value = '';
+      return;
+    }
+
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(file);
+    img.alt = 'Preview of uploaded Brain Tumor image';
+    preview.appendChild(img);
+
+    const clearBtn = document.createElement('button');
+    clearBtn.className = 'clear-btn';
+    clearBtn.setAttribute('aria-label', 'Clear uploaded file');
+    clearBtn.innerHTML = '&times;';
+    clearBtn.onclick = () => {
+      fileInput.value = '';
+      preview.innerHTML = '';
+      fileInput.focus();
+    };
+    preview.appendChild(clearBtn);
+  }
+
+    document.getElementById('braintumor-form').addEventListener('submit', function() {
+        // Show the loading spinner and overlay
+        document.getElementById('loading-spinner').style.display = 'block';
+        document.getElementById('loading-overlay').style.display = 'block';
+        
+        // Disable the submit button to prevent multiple submissions
+        const submitButton = this.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - CliniQ AI v2.0{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}" />
+
+<!-- Hero Section -->
+<section class="hero-section bg-gradient-primary text-white py-6">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center">
+        <h1 class="display-4 fw-bold mb-4 hero-title" data-aos="fade-down">
+          About <span class="hero-highlight">CliniQ AI v2.0</span>
+        </h1>
+        <p class="lead mb-5 hero-subtitle" data-aos="fade-up" data-aos-delay="200">
+          Revolutionizing healthcare with cutting-edge artificial intelligence technology
+        </p>
+        <div data-aos="zoom-in" data-aos-delay="400">
+          <a href="#mission" class="btn btn-warning btn-lg me-3 shadow-lg fw-semibold text-uppercase hero-btn">Our Mission</a>
+          <a href="#team" class="btn btn-outline-light btn-lg shadow-lg fw-semibold text-uppercase hero-btn-outline">Meet Our Team</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<br><br><br><br>
+<!-- Mission Section -->
+<section id="mission" class="py-6 bg-light mission-section">
+  <div class="container">
+    <div class="row align-items-center gy-5">
+      <div class="col-lg-6" data-aos="fade-right">
+        <h2 class="display-5 fw-bold mb-4 section-title">Our Mission</h2>
+        <p class="mb-4 fs-5 text-secondary mission-text">
+          At CliniQ AI v2.0, we are dedicated to transforming healthcare through innovative 
+          artificial intelligence solutions. Our mission is to make accurate medical diagnosis 
+          accessible, affordable, and efficient for everyone, regardless of their location or 
+          economic status.
+        </p>
+        <p class="mb-4 fs-5 text-secondary mission-text">
+          We believe that AI can bridge the gap between medical expertise and patient care, 
+          enabling early detection of diseases and improving treatment outcomes worldwide.
+        </p>
+        <p class="mb-4 fs-5 text-secondary fst-italic mission-text">
+          By harnessing the power of AI, we aim to empower healthcare providers and patients alike, 
+          ensuring timely interventions and personalized care.
+        </p>
+        <div class="row">
+          <div class="col-6">
+            <div class="d-flex align-items-center mb-3 mission-icon-text">
+              <i class="fas fa-bullseye text-warning me-3 fs-3 mission-icon pulse"></i>
+              <div>
+                <span class="fw-bold fs-5 text-dark">Accuracy</span><br>
+                <small class="text-muted">99.7% Precision</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="d-flex align-items-center mb-3 mission-icon-text">
+              <i class="fas fa-clock text-success me-3 fs-3 mission-icon pulse"></i>
+              <div>
+                <span class="fw-bold fs-5 text-dark">Speed</span><br>
+                <small class="text-muted">Real-time Analysis</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6" data-aos="fade-left">
+        <div class="card border-0 shadow-lg rounded-4 mission-card">
+          <div class="card-body p-5">
+            <h4 class="card-title mb-4 section-subtitle">Key Features</h4>
+            <ul class="list-unstyled fs-5 mission-list">
+              <li class="mb-3 d-flex align-items-center">
+                <i class="fas fa-check-circle text-success me-3 fs-4 feature-icon bounce"></i>
+                Advanced AI-powered diagnosis
+              </li>
+              <li class="mb-3 d-flex align-items-center">
+                <i class="fas fa-check-circle text-success me-3 fs-4 feature-icon bounce"></i>
+                Multi-disease detection capabilities
+              </li>
+              <li class="mb-3 d-flex align-items-center">
+                <i class="fas fa-check-circle text-success me-3 fs-4 feature-icon bounce"></i>
+                Secure patient data management
+              </li>
+              <li class="mb-3 d-flex align-items-center">
+                <i class="fas fa-check-circle text-success me-3 fs-4 feature-icon bounce"></i>
+                Real-time appointment scheduling
+              </li>
+              <li class="mb-3 d-flex align-items-center">
+                <i class="fas fa-check-circle text-success me-3 fs-4 feature-icon bounce"></i>
+                Comprehensive medical reports
+              </li>
+              <li class="mb-3 d-flex align-items-center">
+                <i class="fas fa-check-circle text-success me-3 fs-4 feature-icon bounce"></i>
+                Continuous learning and improvement
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<br><br><br><br>
+<!-- Why CliniQ AI Section -->
+<section id="why" class="py-6 bg-gradient-light">
+    <br><br>
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <h2 class="display-5 fw-bold section-title">Why CliniQ AI?</h2>
+      <p class="lead text-secondary mx-auto why-text" style="max-width: 700px;">
+        The healthcare industry faces numerous challenges including limited access to specialists, 
+        diagnostic errors, and increasing patient loads. CliniQ AI addresses these issues by:
+      </p>
+    </div>
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="card shadow-sm border-0 rounded-4 p-5 h-100 text-center why-card">
+          <i class="fas fa-user-md fa-4x text-primary mb-4 why-icon bounce"></i>
+          <h5 class="fw-bold mb-3 why-title">Bridging Expertise Gaps</h5>
+          <p class="text-secondary fs-5 why-desc">
+            Provides AI-powered diagnostic support to healthcare providers in underserved areas, 
+            ensuring expert-level insights are available everywhere.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="card shadow-sm border-0 rounded-4 p-5 h-100 text-center why-card">
+          <i class="fas fa-robot fa-4x text-success mb-4 why-icon bounce"></i>
+          <h5 class="fw-bold mb-3 why-title">Reducing Diagnostic Errors</h5>
+          <p class="text-secondary fs-5 why-desc">
+            Uses advanced machine learning to analyze medical images with high accuracy, 
+            minimizing human error and improving patient outcomes.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="card shadow-sm border-0 rounded-4 p-5 h-100 text-center why-card">
+          <i class="fas fa-clock fa-4x text-warning mb-4 why-icon bounce"></i>
+          <h5 class="fw-bold mb-3 why-title">Faster Diagnoses</h5>
+          <p class="text-secondary fs-5 why-desc">
+            Enables real-time analysis and reporting, accelerating treatment decisions and reducing wait times.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br><br>
+</section>
+
+<br><br><br><br>
+<!-- Technology Section -->
+<section class="py-6">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <h2 class="display-5 fw-bold section-title">Our Technology</h2>
+      <p class="lead text-secondary tech-subtitle">Powered by state-of-the-art AI and machine learning algorithms</p>
+    </div>
+    
+    <div class="row g-4">
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="card h-100 shadow-lg border-0 rounded-4 text-center p-5 tech-card">
+          <div class="mb-4 text-primary tech-icon pulse">
+            <i class="fas fa-brain fs-1"></i>
+          </div>
+          <h5 class="card-title fw-bold tech-title">Deep Learning</h5>
+          <p class="card-text text-secondary fs-5 tech-desc">
+            Advanced neural networks trained on millions of medical images 
+            for accurate disease detection and classification.
+          </p>
+        </div>
+      </div>
+      
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="card h-100 shadow-lg border-0 rounded-4 text-center p-5 tech-card">
+          <div class="mb-4 text-success tech-icon pulse">
+            <i class="fas fa-eye fs-1"></i>
+          </div>
+          <h5 class="card-title fw-bold tech-title">Computer Vision</h5>
+          <p class="card-text text-secondary fs-5 tech-desc">
+            Sophisticated image processing algorithms that can identify 
+            subtle patterns and anomalies in medical imaging.
+          </p>
+        </div>
+      </div>
+      
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="card h-100 shadow-lg border-0 rounded-4 text-center p-5 tech-card">
+          <div class="mb-4 text-warning tech-icon pulse">
+            <i class="fas fa-chart-line fs-1"></i>
+          </div>
+          <h5 class="card-title fw-bold tech-title">Predictive Analytics</h5>
+          <p class="card-text text-secondary fs-5 tech-desc">
+            Data-driven insights that help predict disease progression 
+            and recommend personalized treatment plans.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<br><br><br><br>
+<!-- Team Section -->
+<section id="team" class="py-6 bg-light">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <h2 class="display-5 fw-bold section-title">Our Expert Team</h2>
+      <p class="lead text-secondary team-subtitle">Meet the brilliant minds behind CliniQ AI v2.0</p>
+    </div>
+    
+    <div class="row g-4 justify-content-center">
+      {% for member in [
+        {'name': 'Dr. Amit Kumar Mondal', 'role': 'Founder & CEO', 'desc': 'AI Research Scientist with 15+ years of experience in medical AI and healthcare innovation.', 'img': 'https://via.placeholder.com/150x150/667eea/ffffff?text=AM'},
+        {'name': 'Dr. Rajesh Sharma', 'role': 'Chief Medical Officer', 'desc': 'Leading cardiologist with expertise in AI-driven cardiac diagnostics and treatment.', 'img': 'https://via.placeholder.com/150x150/764ba2/ffffff?text=DR'},
+        {'name': 'Priya Singh', 'role': 'CTO', 'desc': 'Technology expert specializing in scalable AI infrastructure and cloud computing.', 'img': 'https://via.placeholder.com/150x150/f093fb/ffffff?text=PS'},
+        {'name': 'Ankit Kumar', 'role': 'Head of AI Research', 'desc': 'Machine learning specialist focused on medical image analysis and diagnostic algorithms.', 'img': 'https://via.placeholder.com/150x150/f5576c/ffffff?text=AK'}
+      ] %}
+      <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+        <div class="card text-center shadow-lg rounded-4 border-0 h-100 team-card">
+          <div class="card-body p-4">
+            <div class="mb-3 team-img-wrapper">
+              <img src="{{ member.img }}" class="rounded-circle shadow-sm team-img" alt="{{ member.name }}" width="120" height="120" loading="lazy" />
+            </div>
+            <h5 class="card-title fw-bold team-name">{{ member.name }}</h5>
+            <p class="text-muted mb-2 fst-italic team-role">{{ member.role }}</p>
+            <p class="card-text small text-secondary team-desc">{{ member.desc }}</p>
+            <div class="social-links fs-5">
+              <a href="#" class="text-decoration-none me-3 text-primary social-link" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+              <a href="#" class="text-decoration-none me-3 text-info social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="text-decoration-none text-dark social-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<br><br><br><br>
+<!-- Stats Section -->
+<section class="py-6 bg-primary text-white stats-section">
+  <div class="container">
+    <div class="row text-center g-5">
+      <div class="col-md-3" data-aos="fade-up">
+        <h2 class="display-4 fw-bold stats-number">50K+</h2>
+        <p class="mb-0 fs-5 stats-label">Patients Diagnosed</p>
+      </div>
+      <div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
+        <h2 class="display-4 fw-bold stats-number">99.7%</h2>
+        <p class="mb-0 fs-5 stats-label">Accuracy Rate</p>
+      </div>
+      <div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
+        <h2 class="display-4 fw-bold stats-number">100+</h2>
+        <p class="mb-0 fs-5 stats-label">Partner Hospitals</p>
+      </div>
+      <div class="col-md-3" data-aos="fade-up" data-aos-delay="300">
+        <h2 class="display-4 fw-bold stats-number">24/7</h2>
+        <p class="mb-0 fs-5 stats-label">Support Available</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+<style>
+</style>
+
+<!-- Initialize AOS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 900,
+    easing: 'ease-in-out',
+    once: true,
+  });
+</script>

@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" 
+      integrity="sha512-dyZ88n1rZJkXx3+Qk6m8VdKj3O6p6l5Y9l+6H5Z5b5m5Q5f5d5e5f5e5f5e5f5e" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+
+
+
+<div class="container">
+    <div class="row justify-content-center" style="min-height: 100vh; align-items: center; padding-top: 80px; padding-bottom: 40px;">
+        <div class="col-md-8 col-lg-6">
+            <div class="card animate-fade-in">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-md text-success" style="font-size: 3rem;"></i>
+                        <h2 class="mt-3 mb-2">Doctor Registration</h2>
+                        <p class="text-muted">Join our network of medical professionals</p>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('register_doctor') }}" id="registrationForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="full_name" class="form-label">Full Name *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                    <input type="text" class="form-control" id="full_name" name="full_name" 
+                                           placeholder="Enter your full name" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email Address *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                    <input type="email" class="form-control" id="email" name="email" 
+                                           placeholder="example@gmail.com" required>
+                                </div>
+                                <div class="form-text">Must be a Gmail address (@gmail.com)</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="username" class="form-label">Username *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-at"></i>
+                                    </span>
+                                    <input type="text" class="form-control" id="username" name="username" 
+                                           placeholder="Choose a username" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="specialization" class="form-label">Specialization *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-stethoscope"></i>
+                                    </span>
+<select class="form-control" id="specialization" name="specialization" required>
+    <option value="">Select your specialization</option>
+    <option value="Cardiologist">Cardiologist</option>
+    <option value="Neurologist">Neurologist</option>
+    <option value="Radiologist">Radiologist</option>
+    <option value="Pulmonologist">Pulmonologist</option>
+    <option value="Oncologist">Oncologist</option>
+    <option value="General Physician">General Physician</option>
+    <option value="Emergency Medicine">Emergency Medicine</option>
+    <option value="Internal Medicine">Internal Medicine</option>
+    <option value="Pediatrician">Pediatrician</option>
+    <option value="Dermatologist">Dermatologist</option>
+    <option value="Orthopedic">Orthopedic</option>
+    <option value="Psychiatrist">Psychiatrist</option>
+    <option value="Gynecologist">Gynecologist</option>
+    <option value="ENT Specialist">ENT Specialist</option>
+    <option value="Nephrologist">Nephrologist</option>
+    <option value="Endocrinologist">Endocrinologist</option>
+    <option value="Gastroenterologist">Gastroenterologist</option>
+    <option value="Ophthalmologist">Ophthalmologist</option>
+    <option value="Rheumatologist">Rheumatologist</option>
+    <option value="Urologist">Urologist</option>
+    <option value="Hematologist">Hematologist</option>
+    <option value="Allergist">Allergist</option>
+    <option value="Anesthesiologist">Anesthesiologist</option>
+    <option value="Pathologist">Pathologist</option>
+    <option value="Plastic Surgeon">Plastic Surgeon</option>
+    <option value="Psychologist">Psychologist</option>
+</select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="license_number" class="form-label">Medical License Number *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-certificate"></i>
+                                    </span>
+                                    <input type="text" class="form-control" id="license_number" name="license_number" 
+                                           placeholder="Enter your medical license number" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="experience" class="form-label">Years of Experience</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </span>
+                                    <input type="number" class="form-control" id="experience" name="experience" 
+                                           placeholder="Years of experience" min="0" max="50">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-phone"></i>
+                                    </span>
+                                    <input type="tel" class="form-control" id="phone" name="phone" 
+                                           placeholder="+91 9876543210">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="password" class="form-label">Password *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                    <input type="password" class="form-control" id="password" name="password" 
+                                           placeholder="Create a password" required>
+                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password', 'toggleIcon1')">
+                                        <i class="fas fa-eye" id="toggleIcon1"></i>
+                                    </button>
+                                </div>
+                                <div class="form-text">Must contain only letters and numbers</div>
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label for="confirm_password" class="form-label">Confirm Password *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
+                                           placeholder="Confirm your password" required>
+                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('confirm_password', 'toggleIcon2')">
+                                        <i class="fas fa-eye" id="toggleIcon2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="terms" required>
+                                <label class="form-check-label" for="terms">
+                                    I agree to the <a href="#" class="text-primary">Terms of Service</a> and 
+                                    <a href="#" class="text-primary">Privacy Policy</a> *
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 mb-3">
+                            <i class="fas fa-user-md me-2"></i>Create Doctor Account
+                        </button>
+                    </form>
+
+                    <div class="text-center">
+                        <p class="mb-2">Already have an account?</p>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-success">
+                            <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                        </a>
+                    </div>
+
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <p class="mb-2">Are you a patient?</p>
+                        <a href="{{ url_for('register_user') }}" class="btn btn-primary">
+                            <i class="fas fa-user-plus me-2"></i>Register as Patient
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function togglePassword(fieldId, iconId) {
+        const passwordField = document.getElementById(fieldId);
+        const toggleIcon = document.getElementById(iconId);
+        
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordField.type = 'password';
+            toggleIcon.classList.remove('fa-eye-slash');
+            toggleIcon.classList.add('fa-eye');
+        }
+    }
+
+    // Form validation
+    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const confirmPassword = document.getElementById('confirm_password').value.trim();
+        const fullName = document.getElementById('full_name').value.trim();
+        const username = document.getElementById('username').value.trim();
+        const specialization = document.getElementById('specialization').value.trim();
+        const licenseNumber = document.getElementById('license_number').value.trim();
+        
+        // Validate Gmail
+        if (!email.toLowerCase().endsWith('@gmail.com')) {
+            e.preventDefault();
+            alert('Please use a Gmail address (@gmail.com)');
+            return false;
+        }
+        
+        // Validate required fields
+        if (!fullName || !email || !username || !specialization || !licenseNumber || !password || !confirmPassword) {
+            e.preventDefault();
+            alert('Please fill in all required fields');
+            return false;
+        }
+        
+        // Validate password match
+        if (password !== confirmPassword) {
+            e.preventDefault();
+            alert('Passwords do not match');
+            return false;
+        }
+        
+        // Validate password format
+        const passwordRegex = /^[a-zA-Z0-9]+$/;
+        if (!passwordRegex.test(password)) {
+            e.preventDefault();
+            alert('Password must contain only letters and numbers');
+            return false;
+        }
+    });
+</script>
+{% endblock %}

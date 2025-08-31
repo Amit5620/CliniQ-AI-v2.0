@@ -1,0 +1,950 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - CliniQ AI v2.0{% endblock %}
+
+{% block content %}
+<!-- Include FontAwesome and AOS CSS if not already included -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+
+<style>
+  section.py-5 {
+    background: linear-gradient(135deg, #e0f7fa, #80deea);
+    padding-top: 4rem !important;
+    padding-bottom: 4rem !important;
+  }
+
+  .stats-card {
+    border: none;
+    border-radius: 20px;
+    color: white;
+    padding: 2rem 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #2196f3, #21cbf3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+  }
+
+  /* Different gradient backgrounds for each card */
+  .stats-card:nth-child(1) {
+    background: linear-gradient(135deg, #ff6a00, #ee0979);
+  }
+  .stats-card:nth-child(2) {
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+  }
+  .stats-card:nth-child(3) {
+    background: linear-gradient(135deg, #7b4397, #dc2430);
+  }
+  .stats-card:nth-child(4) {
+    background: linear-gradient(135deg, #56ab2f, #a8e063);
+  }
+  .stats-card:nth-child(5) {
+    background: linear-gradient(135deg, #ff512f, #dd2476);
+  }
+  .stats-card:nth-child(6) {
+    background: linear-gradient(135deg, #f7971e, #ffd200);
+  }
+  .stats-card:nth-child(7) {
+    background: linear-gradient(135deg, #00b09b, #96c93d);
+  }
+
+  .stats-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+  }
+
+  .stats-card .card-body {
+    padding: 0;
+  }
+
+  .stats-card i {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    animation: pulseIcon 2.5s infinite ease-in-out;
+    text-shadow: 0 0 8px rgba(255 255 255 / 0.7);
+  }
+
+  @keyframes pulseIcon {
+    0%, 100% { transform: scale(1); opacity: 0.85; }
+    50% { transform: scale(1.15); opacity: 1; }
+  }
+
+  .stats-card h2 {
+    font-weight: 900;
+    font-size: 2.8rem;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 6px rgba(0 0 0 / 0.15);
+  }
+
+  .stats-card p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+    text-shadow: 0 0 4px rgba(0 0 0 / 0.1);
+  }
+
+  .stats-card small {
+    font-size: 0.85rem;
+    color: rgba(255 255 255 / 0.85);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    text-shadow: 0 0 3px rgba(0 0 0 / 0.1);
+  }
+
+  /* Responsive tweaks */
+  @media (max-width: 768px) {
+    .stats-card h2 {
+      font-size: 2.2rem;
+    }
+    .stats-card i {
+      font-size: 2.8rem;
+    }
+  }
+</style>
+
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3" data-aos="fade-up">
+                    Admin Dashboard
+                </h1>
+                <p class="lead mb-4" data-aos="fade-up" data-aos-delay="200">
+                    Complete system overview and management control center
+                </p>
+                <div class="alert alert-info" data-aos="fade-up" data-aos-delay="300">
+                    <i class="fas fa-phone me-2"></i>
+                    <strong>Admin Contact:</strong> +91 9382731364
+                </div>
+            </div>
+            <div class="col-lg-4 text-end" data-aos="fade-up" data-aos-delay="400">
+                <div class="d-flex justify-content-end gap-2">
+                    <button class="btn btn-outline-light" onclick="exportData()">
+                        <i class="fas fa-download me-2"></i>Export Data
+                    </button>
+                    <button class="btn btn-warning" onclick="refreshData()">
+                        <i class="fas fa-sync-alt me-2"></i>Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Overview -->
+<section class="py-5">
+  <div class="container">
+    <div class="row g-4 justify-content-center">
+      <div class="col-xl-2 col-md-4" data-aos="fade-up">
+        <div class="card stats-card text-center">
+          <div class="card-body">
+            <i class="fas fa-users"></i>
+            <h2>{{ total_users }}</h2>
+            <p>Total Users</p>
+            <small>Active patients</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-2 col-md-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="card stats-card text-center">
+          <div class="card-body">
+            <i class="fas fa-user-md"></i>
+            <h2>{{ total_doctors }}</h2>
+            <p>Total Doctors</p>
+            <small>Medical professionals</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-2 col-md-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="card stats-card text-center">
+          <div class="card-body">
+            <i class="fas fa-chart-line"></i>
+            <h2>{{ total_predictions }}</h2>
+            <p>Total Predictions</p>
+            <small>AI diagnoses</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-2 col-md-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="card stats-card text-center">
+          <div class="card-body">
+            <i class="fas fa-calendar-check"></i>
+            <h2>{{ total_appointments }}</h2>
+            <p>Appointments</p>
+            <small>Scheduled bookings</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-2 col-md-4" data-aos="fade-up" data-aos-delay="400">
+        <div class="card stats-card text-center">
+          <div class="card-body">
+            <i class="fas fa-check-circle"></i>
+            <h2>{{ normal_predictions }}</h2>
+            <p>Normal Predictions</p>
+            <small>Healthy results</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-2 col-md-4" data-aos="fade-up" data-aos-delay="500">
+        <div class="card stats-card text-center">
+          <div class="card-body">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h2>{{ abnormal_predictions }}</h2>
+            <p>Abnormal Predictions</p>
+            <small>Needs attention</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-2 col-md-4" data-aos="fade-up" data-aos-delay="600">
+        <div class="card stats-card text-center">
+          <div class="card-body">
+            <i class="fas fa-envelope"></i>
+            <h2>{{ total_contact_messages }}</h2>
+            <p>Contact Messages</p>
+            <small>User inquiries</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Charts Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mb-4" data-aos="fade-up">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Disease Distribution</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="diseaseChart" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Weekly Activity</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="activityChart" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<!-- Management Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- User Management -->
+            <div class="col-lg-15 mb-4" data-aos="fade-up">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">User Management</h5>
+                        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                            <i class="fas fa-plus me-1"></i>Add User
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>User Name</th>
+                                        <th>User Email</th>
+                                        <th>User Username</th>
+                                        <!-- <th>Password</th> -->
+                                        <th>User Role</th>
+                                        <th>User Phone Number</th>
+                                        <th>Total Prediction</th>
+                                        <th>Total Appointment</th>
+                                        <th>Join our community on</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in users %}
+                                    <tr>
+                                        <td>{{ user.full_name }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.username }}</td>
+                                        <!-- <td>{{ user.password_hash }}</td> -->
+                                        <td>
+                                            <span class="badge bg-primary">{{ user.roles|title }}</span>
+                                        </td>
+                                        <td>{{ user.phone_number }}</td>
+                                        <td>{{ user_counts[user.id]['prediction_count'] }}</td>
+                                        <td>{{ user_counts[user.id]['appointment_count'] }}</td>
+                                        <td>{{ user.created_at.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Doctor Management -->
+            <div class="col-lg-15 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Doctor Management</h5>
+                        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addDoctorModal">
+                            <i class="fas fa-plus me-1"></i>Add Doctor
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Doctor Name</th>
+                                        <th>Doctor Specialty</th>
+                                        <th>Doctor Email</th>
+                                        <th>Doctor Username</th>
+                                        <!-- <th>Password</th> -->
+                                        <th>Role</th>
+                                        <th>Licences</th>
+                                        <th>Expreiences</th>
+                                        <th>Phone Number</th>
+                                        <th>Total Appointments Number</th>
+                                        <th>Join our community on</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for doctor in doctors %}
+                                    <tr>
+                                        <td>{{ doctor.full_name }}</td>
+                                        <td>{{ doctor.specialization or 'General' }}</td>
+                                        <td>{{ doctor.email }}</td>
+                                        <td>{{ doctor.username }}</td>
+                                        <!-- <td>{{ doctor.password_hash }}</td> -->
+                                        <td>
+                                            <span class="badge bg-primary">{{ doctor.roles|title }}</span>
+                                        </td>
+                                        <td>{{ doctor.license_number or 'N/A' }}</td>
+                                        <td>{{ doctor.experience or 'N/A' }}</td>
+                                        <td>{{ doctor.phone_number }}</td>
+                                        <td>{{ doctor.doctor_appointments|length }}</td>
+                                        <td>{{ doctor.created_at.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+<!-- Reports & Appointments -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <!-- Recent Predictions -->
+            <div class="col-lg-15 mb-4" data-aos="fade-up">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Recent Predictions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date & Time</th>
+                                        <th>Patient Name</th>
+                                        <th>Age</th>
+                                        <th>Gender</th>
+                                        <th>Patient ID</th>
+                                        <th>Referring Doctor Name</th>
+                                        <th>Referring Doctor Type</th>
+                                        <th>Disease Type</th>
+                                        <th>Symptoms</th>
+                                        <th>Result</th>
+                                        <th>Original Image</th>
+                                        <th>Predicted Image</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for prediction in recent_predictions %}
+                                    <tr>
+                                        <td>{{ prediction.created_at.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                                        <td>{{ prediction.patient_name }}</td>
+                                        <td>{{ prediction.patient_age }}</td>
+                                        <td>{{ prediction.patient_gender }}</td>
+                                        <td>{{ prediction.patient_id }}</td>
+                                        <td>{{ prediction.referring_doctor }}</td>
+                                        <td>{{ prediction.disease_type.replace('_', ' ').title() }}</td>
+                                        <td>
+                                            <span class="badge bg-primary">{{ prediction.disease_type.replace('_', ' ').title() }}</span>
+                                        </td>
+                                        <td>{{ prediction.symptoms[:50] }}{% if prediction.symptoms|length > 50 %}...{% endif %}</td>
+                                        <td>{{ prediction.prediction_result }}</td>
+                                        <td>
+                                            {% if prediction.original_image %}
+                                            <a href="{{ url_for('original_image', original_id=prediction.id) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                            {% else %}
+                                            <span class="text-muted">N/A</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if prediction.predicted_image %}
+                                            <a href="{{ url_for('predicted_image', predicted_id=prediction.id) }}" target="_blank" class="btn btn-sm btn-outline-success">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                            {% else %}
+                                            <span class="text-muted">N/A</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{{ url_for('prediction_result', prediction_id=prediction.id) }}" target="_blank"
+                                            class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye me-1"></i>View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </div>
+</section>
+
+
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <!-- Upcoming Appointments -->
+            <div class="col-lg-15 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-file-medical me-2"></i>Upcoming Appointments</h5>
+                    </div>
+                    <div class="card-body">
+                        {% set now_time = now() %}   {# current datetime #}
+                        {% set upcoming_appointments = [] %}
+
+                        {% for appointment in appointments %}
+                            {# ensure appointment.appointment_datetime is a full datetime object #}
+                            {% if appointment.appointment_datetime >= now_time %}
+                                {% set _ = upcoming_appointments.append(appointment) %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if upcoming_appointments %}
+                        {% set upcoming_appointments = upcoming_appointments|sort(attribute='appointment_datetime') %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                    <th>Date & Time</th>
+                                    <th>Patient Name</th>
+                                    <th>Patient Age</th>
+                                    <th>Patient Gender</th>
+                                    <th>Disease Type</th>
+                                    <th>Result</th>
+
+                                    <th>Doctor Name</th>
+                                    <th>Doctor Specialization</th>
+                                    <th>Doctor Phone No</th>
+                                    <th>Doctor License Number</th>
+                                    <th>Doctor Experience</th>
+
+                                    <th>Symptoms</th>
+                                    <th>Referring Doctor</th>
+
+                                    <th>Status</th>
+                                    <th>Notes</th>
+                                    <th>Original Image</th>
+                                    <th>Predicted Image</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {% for appointment in upcoming_appointments %}
+                                    <tr>
+                                    <td>{{ appointment.appointment_datetime.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                                    <td>{{ appointment.patient_name }}</td>
+                                    <td>{{ appointment.patient_age }}</td>
+                                    <td>{{ appointment.patient_gender }}</td>
+                                    <td>{{ appointment.disease_type|title or 'N/A' }}</td>
+                                    <td>{{ appointment.prediction_result }}</td>
+
+
+                                    <td>{{ appointment.doctor_name }}</td>
+                                    <td>{{ appointment.specialization or 'General' }}</td>
+                                    <td>{{ appointment.doctor_phone or 'N/A' }}</td>
+                                    <td>{{ appointment.license_number or 'N/A' }}</td>
+                                    <td>{{ appointment.experience or 'N/A' }}</td>
+                                    
+                                    <td>{{ appointment.symptoms[:50] }}{% if appointment.symptoms|length > 50 %}...{% endif %}</td>
+                                    <td>{{ appointment.referring_doctor or 'N/A' }}</td>
+
+                                    <td>
+                                        <span class="badge bg-{{ 'success' if appointment.status == 'completed' else 'warning' if appointment.status == 'pending' else 'info' if appointment.status == 'confirmed' else 'danger' }}">
+                                            {{ appointment.status|title }}
+                                        </span>
+                                    </td>
+                                    <td>{{ appointment.notes or 'No notes' }}</td>
+                                    <td>
+                                        {% if appointment.original_image %}
+                                        <a href="{{ url_for('original_image', original_id=appointment.prediction_id) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        {% else %}
+                                        <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if appointment.predicted_image %}
+                                        <a href="{{ url_for('predicted_image', predicted_id=appointment.prediction_id) }}" target="_blank" class="btn btn-sm btn-outline-success">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        {% else %}
+                                        <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('prediction_result', prediction_id=appointment.prediction_id) }}" target="_blank"
+                                        class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye me-1"></i>View
+                                        </a>
+                                    </td>
+                                </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div class="text-center py-3">
+                            <p class="text-muted">No upcoming appointments</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <!-- Past Appointments -->
+            <div class="col-lg-15 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-file-medical me-2"></i>Past Appointments</h5>
+                    </div>
+                    <div class="card-body">
+                        {% set now_time = now() %}   {# current datetime #}
+                        {% set past_appointments = [] %}
+
+                        {% for appointment in appointments %}
+                            {# ensure appointment.appointment_datetime is a full datetime object #}
+                            {% if appointment.appointment_datetime < now_time %}
+                                {% set _ = past_appointments.append(appointment) %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if past_appointments %}
+                        {% set past_appointments = past_appointments|sort(attribute='appointment_datetime') %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                    <th>Date & Time</th>
+                                    <th>Patient Name</th>
+                                    <th>Patient Age</th>
+                                    <th>Patient Gender</th>
+                                    <th>Disease Type</th>
+                                    <th>Result</th>
+
+                                    <th>Doctor Name</th>
+                                    <th>Doctor Specialization</th>
+                                    <th>Doctor Phone No</th>
+                                    <th>Doctor License Number</th>
+                                    <th>Doctor Experience</th>
+
+                                    <th>Symptoms</th>
+                                    <th>Referring Doctor</th>
+
+                                    <th>Status</th>
+                                    <th>Notes</th>
+                                    <th>Original Image</th>
+                                    <th>Predicted Image</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {% for appointment in past_appointments %}
+                                    <tr>
+                                    <td>{{ appointment.appointment_datetime.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                                    <td>{{ appointment.patient_name }}</td>
+                                    <td>{{ appointment.patient_age }}</td>
+                                    <td>{{ appointment.patient_gender }}</td>
+                                    <td>{{ appointment.disease_type|title or 'N/A' }}</td>
+                                    <td>{{ appointment.prediction_result }}</td>
+
+
+                                    <td>{{ appointment.doctor_name }}</td>
+                                    <td>{{ appointment.specialization or 'General' }}</td>
+                                    <td>{{ appointment.doctor_phone or 'N/A' }}</td>
+                                    <td>{{ appointment.license_number or 'N/A' }}</td>
+                                    <td>{{ appointment.experience or 'N/A' }}</td>
+
+                                    <td>{{ appointment.symptoms[:50] }}{% if appointment.symptoms|length > 50 %}...{% endif %}</td>
+                                    <td>{{ appointment.referring_doctor or 'N/A' }}</td>
+
+                                    <td>
+                                        <span class="badge bg-success">
+                                            Completed
+                                        </span>
+                                    </td>
+                                    <td>{{ appointment.notes or 'No notes' }}</td>
+                                    <td>
+                                        {% if appointment.original_image %}
+                                        <a href="{{ url_for('original_image', original_id=appointment.prediction_id) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        {% else %}
+                                        <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if appointment.predicted_image %}
+                                        <a href="{{ url_for('predicted_image', predicted_id=appointment.prediction_id) }}" target="_blank" class="btn btn-sm btn-outline-success">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        {% else %}
+                                        <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('prediction_result', prediction_id=appointment.prediction_id) }}" target="_blank"
+                                        class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye me-1"></i>View
+                                        </a>
+                                    </td>
+                                </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div class="text-center py-3">
+                            <p class="text-muted">No past appointments</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+<!-- Contact Messages -->
+<section class="py-5">
+    <div class="container">
+        <div class="card" data-aos="fade-up">
+            <div class="card-header">
+                <h5 class="mb-0">Contact Messages</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Subject</th>
+                                <th>Message</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for contact in recent_contacts %}
+                            <tr>
+                                <td>{{ contact.name }}</td>
+                                <td>{{ contact.email }}</td>
+                                <td>{{ contact.subject }}</td>
+                                <td>{{ contact.message[:50] }}...</td>
+                                <td>{{ contact.created_at.strftime('%d/%m/%Y') }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'warning' if contact.status == 'new' else 'success' }}">
+                                        {{ contact.status|title }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="markAsRead({{ contact.id }})">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-info" onclick="replyMessage('{{ contact.email }}')">
+                                        <i class="fas fa-reply"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('register') }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" name="full_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" required>
+                    </div>
+                    <input type="hidden" name="role" value="user">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Doctor Modal -->
+<div class="modal fade" id="addDoctorModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Doctor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('register') }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" name="full_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Specialty</label>
+                        <select class="form-control" name="doctor_type" required>
+                            <option value="">Select Specialty</option>
+                            <option value="Cardiologist">Cardiologist</option>
+                            <option value="Neurologist">Neurologist</option>
+                            <option value="Radiologist">Radiologist</option>
+                            <option value="Pulmonologist">Pulmonologist</option>
+                            <option value="Oncologist">Oncologist</option>
+                            <option value="General Physician">General Physician</option>
+                            <option value="Dermatologist">Dermatologist</option>
+                            <option value="Orthopedic">Orthopedic</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Doctor</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+AOS.init({
+    duration: 800,
+    once: true,
+  });
+// Charts initialization
+document.addEventListener('DOMContentLoaded', function() {
+    // Disease Distribution Chart
+    const diseaseCtx = document.getElementById('diseaseChart').getContext('2d');
+    const diseaseData = {{ prediction_data | tojson }};
+    
+    new Chart(diseaseCtx, {
+        type: 'doughnut',
+        data: {
+            labels: diseaseData.map(function(item) { return item[0]; }),
+            datasets: [{
+                data: diseaseData.map(function(item) { return item[1]; }),
+                backgroundColor: [
+                    '#667eea',
+                    '#764ba2',
+                    '#f093fb',
+                    '#f5576c',
+                    '#4facfe',
+                    '#00f2fe'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Activity Chart
+    const activityCtx = document.getElementById('activityChart').getContext('2d');
+    new Chart(activityCtx, {
+        type: 'line',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Predictions',
+                data: [12, 19, 3, 5, 2, 3, 9],
+                borderColor: '#667eea',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                tension: 0.4
+            }, {
+                label: 'Appointments',
+                data: [5, 9, 12, 15, 8, 12, 7],
+                borderColor: '#f093fb',
+                backgroundColor: 'rgba(240, 147, 251, 0.1)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+});
+
+// Utility functions
+function exportData() {
+    alert('Export functionality will be implemented soon');
+}
+
+function refreshData() {
+    location.reload();
+}
+
+function editUser(userId) {
+    alert('Edit user functionality will be implemented soon: ' + userId);
+}
+
+function deleteUser(userId) {
+    alert('Delete user functionality will be implemented soon: ' + userId);
+}
+
+function editDoctor(doctorId) {
+    alert('Edit doctor functionality will be implemented soon: ' + doctorId);
+}
+
+function deleteDoctor(doctorId) {
+    alert('Delete doctor functionality will be implemented soon: ' + doctorId);
+}
+
+function markAsRead(contactId) {
+    alert('Mark as read functionality will be implemented soon: ' + contactId);
+}
+
+function replyMessage(email) {
+    window.location.href = `mailto:${email}`;
+}
+
+function viewAppointment(appointmentId) {
+    alert('View appointment functionality will be implemented soon: ' + appointmentId);
+}
+
+function editAppointment(appointmentId) {
+    alert('Edit appointment functionality will be implemented soon: ' + appointmentId);
+}
+</script>
+{% endblock %}

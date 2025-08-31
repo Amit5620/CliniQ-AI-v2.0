@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" 
+      integrity="sha512-dyZ88n1rZJkXx3+Qk6m8VdKj3O6p6l5Y9l+6H5Z5b5m5Q5f5d5e5f5e5f5e5f5e" crossorigin="anonymous" referrerpolicy="no-referrer" / >
+<link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 animate-slide-up">
+        <h1 class="hero-title">Welcome to <span class="neon">CliniQ AI</span></h1>
+        <p class="hero-subtitle">Revolutionizing healthcare with <span class="gradient-text">AI-powered diagnosis</span></p>
+        <div class="d-flex gap-3 justify-content-center justify-content-lg-start mt-4">
+          {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('login') }}" class="btn-glow">
+              <i class="fas fa-sign-in-alt me-2"></i>Login
+            </a>
+            <div class="dropdown">
+              <button class="btn-glass dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="fas fa-user-plus me-2"></i>Register
+              </button>
+              <ul class="dropdown-menu glass-dropdown">
+                <li><a class="dropdown-item" href="{{ url_for('register_user', role='user') }}">
+                  <i class="fas fa-user me-2"></i>As Patient
+                </a></li>
+                <li><a class="dropdown-item" href="{{ url_for('register_doctor', role='doctor') }}">
+                  <i class="fas fa-user-md me-2"></i>As Doctor
+                </a></li>
+              </ul>
+            </div>
+          {% else %}
+            {% set user_role = current_user.roles[0].name if current_user.roles else 'user' %}
+            <a href="{{ url_for(user_role + '_dashboard') }}" class="btn-glow">
+              <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+            </a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-lg-6 text-center animate-float">
+        <i class="fas fa-heartbeat neon-icon"></i>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features-section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title">Our AI-Powered Features</h2>
+      <p class="section-subtitle">The future of diagnosis, available today</p>
+    </div>
+    <div class="row">
+      {% set features = [
+        {'icon':'fa-heartbeat','title':'ECG Analysis','text':'Deep learning electrocardiogram analysis'},
+        {'icon':'fa-brain','title':'Brain Tumor Detection','text':'AI-powered MRI/CT brain scan analysis'},
+        {'icon':'fa-lungs','title':'Pneumonia Detection','text':'Chest X-ray classification & severity check'},
+        {'icon':'fa-lungs-virus','title':'Lung Cancer Screening','text':'AI-based early lung cancer detection'}
+      ] %}
+      {% for f in features %}
+      <div class="col-md-6 col-lg-3 mb-4 animate-fade-in">
+        <div class="feature-card">
+          <i class="fas {{ f.icon }} feature-icon"></i>
+          <h5>{{ f.title }}</h5>
+          <p>{{ f.text }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Statistics -->
+<section class="stats-section">
+  <div class="container">
+    <div class="row text-center">
+      {% set stats = [
+        {'num':'50K+','text':'Scans Analyzed'},
+        {'num':'98%','text':'Accuracy Rate'},
+        {'num':'1000+','text':'Doctors Trust Us'},
+        {'num':'24/7','text':'Available'}
+      ] %}
+      {% for s in stats %}
+      <div class="col-md-3 mb-4 animate-zoom-in">
+        <h2 class="stat-number">{{ s.num }}</h2>
+        <p class="stat-text">{{ s.text }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="steps-section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-subtitle">3 simple steps to your diagnosis</p>
+    </div>
+    <div class="row">
+      {% set steps = [
+        {'num':'1','title':'Upload Medical Image','text':'Upload ECG, X-ray, MRI, or CT securely'},
+        {'num':'2','title':'AI Analysis','text':'AI processes and analyzes your scan instantly'},
+        {'num':'3','title':'Get Results','text':'Receive results and book specialists easily'}
+      ] %}
+      {% for step in steps %}
+      <div class="col-md-4 text-center mb-4 animate-fade-in">
+        <div class="step-card">
+          <div class="step-circle">{{ step.num }}</div>
+          <h5>{{ step.title }}</h5>
+          <p>{{ step.text }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container text-center">
+    <h2 class="cta-title">Ready to Experience the Future?</h2>
+    <p class="cta-subtitle">Join thousands using CliniQ AI today</p>
+    {% if not current_user.is_authenticated %}
+      <a href="{{ url_for('register', role='user') }}" class="btn-glow me-3">
+        <i class="fas fa-rocket me-2"></i>Get Started
+      </a>
+      <a href="{{ url_for('about') }}" class="btn-glass">
+        <i class="fas fa-info-circle me-2"></i>Learn More
+      </a>
+    {% else %}
+      {% set user_role = current_user.roles[0].name if current_user.roles else 'user' %}
+      <a href="{{ url_for(user_role + '_dashboard') }}" class="btn-glow">
+        <i class="fas fa-tachometer-alt me-2"></i>Access Dashboard
+      </a>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+
+{% endblock %}

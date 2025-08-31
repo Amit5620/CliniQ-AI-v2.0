@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid" style="padding-top: 80px;">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 sidebar animate-slide-in">
+            <div class="position-sticky">
+                <div class="text-center py-4">
+                    <i class="fas fa-user-circle text-white" style="font-size: 4rem;"></i>
+                    <h5 class="text-white mt-2">{{ current_user.full_name }}</h5>
+                    <p class="text-white-50">Patient</p>
+                </div>
+                
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('user_dashboard') }}">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            <i class="fas fa-brain me-2"></i>AI Diagnosis
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('ecg_predict') }}">
+                                <i class="fas fa-heartbeat me-2"></i>ECG Analysis
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('braintumor_predict') }}">
+                                <i class="fas fa-brain me-2"></i>Brain Tumor Detection
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('pneumonia_predict') }}">
+                                <i class="fas fa-lungs me-2"></i>Pneumonia Detection
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('lungcancer_predict') }}">
+                                <i class="fas fa-lungs-virus me-2"></i>Lung Cancer Screening
+                            </a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('user_dashboard') }}">
+                            <i class="fas fa-file-medical me-2"></i>My Reports
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('user_appointments') }}">
+                            <i class="fas fa-calendar-check me-2"></i>Appointments
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('book_appointment') }}">
+                            <i class="fas fa-plus-circle me-2"></i>Book Appointment
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="col-md-9 col-lg-10 ms-sm-auto px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="fas fa-calendar-check me-2"></i>My Appointments
+                </h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-group me-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="location.reload()">
+                            <i class="fas fa-sync-alt me-1"></i>Refresh
+                        </button>
+                    </div>
+                    <a href="{{ url_for('book_appointment') }}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-plus me-1"></i>Book New
+                    </a>
+                </div>
+            </div>
+
+            <!-- Upcoming Appointments -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Upcoming Appointments</h5>
+                </div>
+                <div class="card-body">
+                    {% set now_time = now() %}
+                    {% set upcoming_appointments = [] %}
+                    {% for appointment in appointments %}
+                        {% if appointment.appointment_datetime >= now_time %}
+                            {% set _ = upcoming_appointments.append(appointment) %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if upcoming_appointments %}
+                    {% set upcoming_appointments = upcoming_appointments|sort(attribute='appointment_datetime') %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <!-- <th>Patient Name</th>
+                                    <th>Patient Age</th>
+                                    <th>Patient Gender</th> -->
+                                    <th>Disease Type</th>
+                                    <th>Result</th>
+
+                                    <th>Doctor Name</th>
+                                    <th>Doctor Specialization</th>
+                                    <th>Doctor Phone No</th>
+                                    <th>Doctor License Number</th>
+                                    <th>Doctor Experience</th>
+
+                                    <th>Symptoms</th>
+                                    <th>Referring Doctor</th>
+
+                                    <th>Status</th>
+                                    <th>Notes</th>
+                                    <th>Original Image</th>
+                                    <th>Predicted Image</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in upcoming_appointments %}
+                                <tr>
+                                    <td>{{ appointment.appointment_datetime.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                                    <!-- <td>{{ appointment.patient_name }}</td>
+                                    <td>{{ appointment.patient_age }}</td>
+                                    <td>{{ appointment.patient_gender }}</td> -->
+                                    <td>{{ appointment.disease_type|title or 'N/A' }}</td>
+                                    <td>{{ appointment.prediction_result }}</td>
+
+
+                                    <td>{{ appointment.doctor_name }}</td>
+                                    <td>{{ appointment.specialization or 'General' }}</td>
+                                    <td>{{ appointment.doctor_phone or 'N/A' }}</td>
+                                    <td>{{ appointment.license_number or 'N/A' }}</td>
+                                    <td>{{ appointment.experience or 'N/A' }}</td>
+
+                                    <td>{{ appointment.symptoms[:50] }}{% if appointment.symptoms|length > 50 %}...{% endif %}</td>
+                                    <td>{{ appointment.referring_doctor or 'N/A' }}</td>
+
+                                    <td>
+                                        <span class="badge bg-{{ 'success' if appointment.status == 'completed' else 'warning' if appointment.status == 'pending' else 'info' if appointment.status == 'confirmed' else 'danger' }}">
+                                            {{ appointment.status|title }}
+                                        </span>
+                                    </td>
+                                    <td>{{ appointment.notes or 'No notes' }}</td>
+                                    <td>
+                                        {% if appointment.original_image %}
+                                        <a href="{{ url_for('original_image', original_id=appointment.prediction_id) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        {% else %}
+                                        <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if appointment.predicted_image %}
+                                        <a href="{{ url_for('predicted_image', predicted_id=appointment.prediction_id) }}" target="_blank" class="btn btn-sm btn-outline-success">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        {% else %}
+                                        <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('prediction_result', prediction_id=appointment.prediction_id) }}" target="_blank"
+                                        class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye me-1"></i>View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-3">
+                        <p class="text-muted">No upcoming appointments</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+
+
+
+            <!-- Past Appointments -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Past Appointments</h5>
+                </div>
+                <div class="card-body">
+                    {% set now_time = now() %}
+                    {% set past_appointments = [] %}
+                    {% for appointment in appointments %}
+                        {% if appointment.appointment_datetime < now_time %}
+                            {% set _ = past_appointments.append(appointment) %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if past_appointments %}
+                    {% set past_appointments = past_appointments|sort(attribute='appointment_datetime', reverse=true) %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <!-- <th>Patient Name</th>
+                                    <th>Patient Age</th>
+                                    <th>Patient Gender</th> -->
+                                    <th>Disease Type</th>
+                                    <th>Result</th>
+
+                                    <th>Doctor Name</th>
+                                    <th>Doctor Specialization</th>
+                                    <th>Doctor Phone No</th>
+                                    <th>Doctor License Number</th>
+                                    <th>Doctor Experience</th>
+
+                                    <th>Symptoms</th>
+                                    <th>Referring Doctor</th>
+
+                                    <th>Status</th>
+                                    <th>Notes</th>
+                                    <th>Original Image</th>
+                                    <th>Predicted Image</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in past_appointments %}
+                                <tr>
+                                    <td>{{ appointment.appointment_datetime.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                                    <!-- <td>{{ appointment.patient_name }}</td>
+                                    <td>{{ appointment.patient_age }}</td>
+                                    <td>{{ appointment.patient_gender }}</td> -->
+                                    <td>{{ appointment.disease_type|title or 'N/A' }}</td>
+                                    <td>{{ appointment.prediction_result }}</td>
+
+
+                                    <td>{{ appointment.doctor_name }}</td>
+                                    <td>{{ appointment.specialization or 'General' }}</td>
+                                    <td>{{ appointment.doctor_phone or 'N/A' }}</td>
+                                    <td>{{ appointment.license_number or 'N/A' }}</td>
+                                    <td>{{ appointment.experience or 'N/A' }}</td>
+                                    
+                                    <td>{{ appointment.symptoms[:50] }}{% if appointment.symptoms|length > 50 %}...{% endif %}</td>
+                                    <td>{{ appointment.referring_doctor or 'N/A' }}</td>
+
+                                    <td><span class="badge bg-success">Completed</span></td>
+                                    
+                                    <td>{{ appointment.notes or 'No notes' }}</td>
+                                    <td>
+                                        {% if appointment.original_image %}
+                                        <a href="{{ url_for('original_image', original_id=appointment.prediction_id) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        {% else %}
+                                        <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if appointment.predicted_image %}
+                                        <a href="{{ url_for('predicted_image', predicted_id=appointment.prediction_id) }}" target="_blank" class="btn btn-sm btn-outline-success">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        {% else %}
+                                        <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('prediction_result', prediction_id=appointment.prediction_id) }}" target="_blank"
+                                        class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye me-1"></i>View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-3">
+                        <p class="text-muted">No past appointments</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if not appointments %}
+            <div class="text-center py-5">
+                <i class="fas fa-calendar-check text-muted" style="font-size: 4rem;"></i>
+                <h4 class="text-muted mt-3">No Appointments Found</h4>
+                <p class="text-muted">You haven't booked any appointments yet.</p>
+                <a href="{{ url_for('book_appointment') }}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Book Your First Appointment
+                </a>
+            </div>
+            {% endif %}
+        </main>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ECG Prediction Result</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin-top: 30px;
+        }
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .patient-details {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            color: white;
+        }
+        .img-fluid {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .table {
+            font-size: 0.9rem;
+        }
+        .table-dark {
+            background-color: #667eea;
+        }
+        h2, h3, h4, h5, h6 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center">🩺 ECG Analysis Result</h2>
+
+        <!-- Patient Information -->
+        <div class="patient-details mt-4">
+            <h4>👤 Patient Details</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Patient Name:</strong> {{ patient_name }}</p>
+                    <p><strong>Patient Age:</strong> {{ patient_age }}</p>
+                    <p><strong>Patient Gender:</strong> {{ patient_gender }}</p>
+                    <p><strong>Patient ID:</strong> {{ patient_id }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Doctor Name:</strong> {{ doctor_name }}</p>
+                    <p><strong>Doctor Specilization:</strong> {{ doctor_type }}</p>
+                    <p><strong>Patient Symptoms:</strong> {{ patient_symptoms }}</p>
+                    <p><strong></strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Image -->
+        <div class="section prediction-results">
+            <h3>🧠 Upload Image by the Patient</h3>
+            <h5><strong>UPLOAD DATA:</strong> ECG Image of Patient</h5>
+            <img src="{{ url_for('static', filename='uploads/' + original) }}" class="img-fluid" alt="ECG Upload" style="cursor: pointer;" onclick="window.open('{{ url_for('static', filename='uploads/' + original) }}', '_blank')">
+            <div class="download-section mt-3">
+                <a href="{{ url_for('static', filename='uploads/' + original) }}" class="btn" download>
+                    <i class="fas fa-download me-2"></i>Download Original Image
+                </a>
+            </div>
+        </div>
+
+        <!-- Section: Deep Learning -->
+        <div class="section prediction-results">
+            <h3>🧠 Analysis by Deep Learning</h3>
+            <h5><strong>Prediction:</strong> {{ ', '.join(predicted_classes1) if predicted_classes1 else 'Normal' }}</h5>
+            <img src="{{ url_for('static', filename='process/' + pred1) }}" class="img-fluid" alt="Deep Learning Prediction 1" style="cursor: pointer;" onclick="window.open('{{ url_for('static', filename='process/' + pred1) }}', '_blank')">
+            <div class="download-section mt-3">
+                <a href="{{ url_for('static', filename='process/' + pred1) }}" class="btn" download>
+                    <i class="fas fa-download me-2"></i>Download Prediction 1
+                </a>
+            </div>
+
+            {% if pred2 %}
+            <img src="{{ url_for('static', filename='process/' + pred2) }}" class="img-fluid mt-3" alt="Deep Learning Prediction 2" style="cursor: pointer;" onclick="window.open('{{ url_for('static', filename='process/' + pred2) }}', '_blank')">
+            <div class="download-section mt-3">
+                <a href="{{ url_for('static', filename='process/' + pred2) }}" class="btn" download>
+                    <i class="fas fa-download me-2"></i>Download Prediction 2
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Section: Machine Learning -->
+        <div class="section prediction-results">
+            <h3>⚙️ Analysis by Machine Learning</h3>
+            <h5><strong>Prediction:</strong> {{ ecg_prediction }}</h5>
+
+            <div class="ecg-stages mt-4">
+                <h4>📈 ECG Processing Pipeline</h4>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h6>Grayscale Image</h6>
+                        <img src="{{ url_for('static', filename='process/' + ecg_outputs.gray) }}" class="img-fluid mb-3">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Divided Leads (1–12)</h6>
+                        <img src="{{ url_for('static', filename='process/' + ecg_outputs.lead_12) }}" class="img-fluid mb-3">
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Long Lead (13)</h6>
+                        <img src="{{ url_for('static', filename='process/' + ecg_outputs.lead_13) }}" class="img-fluid mb-3">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Preprocessed Leads (1–12)</h6>
+                        <img src="{{ url_for('static', filename='process/' + ecg_outputs.preprocessed_12) }}" class="img-fluid mb-3">
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Preprocessed Long Lead (13)</h6>
+                        <img src="{{ url_for('static', filename='process/' + ecg_outputs.preprocessed_13) }}" class="img-fluid mb-3">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h6>Contour Plot (1–12)</h6>
+                        <img src="{{ url_for('static', filename='process/' + ecg_outputs.contour) }}" class="img-fluid mb-3">
+                    </div>
+                </div>
+                
+            </div>
+
+            {% if ecg_1d_signal is not none %}
+            <div class="data-section mt-5">
+                <h5>📊 1D Signal (Flattened)</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                {% for col in ecg_1d_signal.columns %}
+                                <th>{{ col }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in ecg_1d_signal.itertuples(index=False) %}
+                            <tr>
+                                {% for value in row %}
+                                <td>{{ "%.4f"|format(value) }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if ecg_reduced is not none %}
+            <div class="data-section mt-5">
+                <h5>📉 Dimensionality Reduced Signal (PCA)</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                {% for col in ecg_reduced.columns %}
+                                <th>{{ col }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in ecg_reduced.itertuples(index=False) %}
+                            <tr>
+                                {% for value in row %}
+                                <td>{{ "%.4f"|format(value) }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Navigation -->
+        <div class="buttons text-center mt-5">
+            <a href="{{ url_for('user_dashboard') }}" class="btn">
+                <i class="fas fa-home me-2"></i>Go to Home
+            </a>
+            <a href="{{ url_for('ecg_predict') }}" class="btn">
+                <i class="fas fa-upload me-2"></i>New Prediction
+            </a>
+        </div>
+    </div>
+    <br><br><br><br><br>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

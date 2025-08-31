@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid" style="padding-top: 80px;">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 sidebar animate-slide-in">
+            <div class="position-sticky">
+                <div class="text-center py-4">
+                    <i class="fas fa-user-md text-white" style="font-size: 4rem;"></i>
+                    <h5 class="text-white mt-2">{{ current_user.full_name }}</h5>
+                    <p class="text-white-50">Doctor - {{ current_user.specialization or 'General' }}</p>
+                </div>
+                
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('doctor_dashboard') }}">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="col-md-9 col-lg-10 ms-sm-auto px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="fas fa-user-md me-2"></i>Doctor Dashboard
+                </h1>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3 mb-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
+                            <h2 class="display-5 fw-bold">{{ total_predictions }}</h2>
+                            <p class="mb-0">Total Predictions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-calendar-check fa-3x text-success mb-3"></i>
+                            <h2 class="display-5 fw-bold">{{ total_appointments }}</h2>
+                            <p class="mb-0">Total Appointments</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-check-circle fa-3x text-info mb-3"></i>
+                            <h2 class="display-5 fw-bold">{{ normal_predictions }}</h2>
+                            <p class="mb-0">Normal Predictions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                            <h2 class="display-5 fw-bold">{{ abnormal_predictions }}</h2>
+                            <p class="mb-0">Abnormal Predictions</p>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Recent Predictions -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Appointment User Predictions Report</h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_predictions %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Patient Name</th>
+                                    <th>Age</th>
+                                    <th>Gender</th>
+                                    <th>Patient ID</th>
+                                    <th>Referring Doctor Name</th>
+                                    <th>Referring Doctor Type</th>
+                                    <th>Disease Type</th>
+                                    <th>Symptoms</th>
+                                    <th>Result</th>
+                                    <th>Original Image</th>
+                                    <th>Predicted Image</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for prediction in recent_predictions %}
+                                <tr>
+                                    <td>{{ prediction.created_at.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                                    <td>{{ prediction.patient_name }}</td>
+                                    <td>{{ prediction.patient_age }}</td>
+                                    <td>{{ prediction.patient_gender }}</td>
+                                    <td>{{ prediction.patient_id }}</td>
+                                    <td>{{ prediction.referring_doctor }}</td>
+                                    <td>{{ prediction.disease_type.replace('_', ' ').title() }}</td>
+                                    <td>
+                                        <span class="badge bg-primary">{{ prediction.disease_type.replace('_', ' ').title() }}</span>
+                                    </td>
+                                    <td>{{ prediction.symptoms[:50] }}{% if prediction.symptoms|length > 50 %}...{% endif %}</td>
+                                    <td>{{ prediction.prediction_result }}</td>
+                                    <td>
+                                        {% if prediction.original_image %}
+                                        <a href="{{ url_for('original_image', original_id=prediction.id) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        {% else %}
+                                        <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if prediction.predicted_image %}
+                                        <a href="{{ url_for('predicted_image', predicted_id=prediction.id) }}" target="_blank" class="btn btn-sm btn-outline-success">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        {% else %}
+                                        <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('prediction_result', prediction_id=prediction.id) }}" target="_blank"
+                                        class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye me-1"></i>View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-3">
+                        <p class="text-muted">No recent predictions</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+
+
+            <!-- Upcoming Appointments -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">My Upcoming Appointments</h5>
+                </div>
+                <div class="card-body">
+                    {% set now_time = now() %}   {# current datetime #}
+                    {% set upcoming_appointments = [] %}
+
+                    {% for appointment in appointments %}
+                        {# ensure appointment.appointment_datetime is a full datetime object #}
+                        {% if appointment.appointment_datetime >= now_time %}
+                            {% set _ = upcoming_appointments.append(appointment) %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if upcoming_appointments %}
+                    {% set upcoming_appointments = upcoming_appointments|sort(attribute='appointment_datetime') %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Patient Name</th>
+                                    <th>Patient Age</th>
+                                    <th>Patient Gender</th>
+                                    <th>Disease Type</th>
+                                    <th>Result</th>
+
+                                    <!-- <th>Doctor Name</th>
+                                    <th>Doctor Specialization</th>
+                                    <th>Doctor Phone No</th>
+                                    <th>Doctor License Number</th>
+                                    <th>Doctor Experience</th> -->
+
+                                    <th>Symptoms</th>
+                                    <th>Referring Doctor</th>
+
+                                    <th>Status</th>
+                                    <th>Notes</th>
+                                    <th>Original Image</th>
+                                    <th>Predicted Image</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in upcoming_appointments %}
+                                <tr>
+                                    <td>{{ appointment.appointment_datetime.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                                    <td>{{ appointment.patient_name }}</td>
+                                    <td>{{ appointment.patient_age }}</td>
+                                    <td>{{ appointment.patient_gender }}</td>
+                                    <td>{{ appointment.disease_type|title or 'N/A' }}</td>
+                                    <td>{{ appointment.prediction_result }}</td>
+
+
+                                    <!-- <td>{{ appointment.doctor_name }}</td>
+                                    <td>{{ appointment.specialization or 'General' }}</td>
+                                    <td>{{ appointment.doctor_phone or 'N/A' }}</td>
+                                    <td>{{ appointment.license_number or 'N/A' }}</td>
+                                    <td>{{ appointment.experience or 'N/A' }}</td> -->
+                                    
+                                    <td>{{ appointment.symptoms[:50] }}{% if appointment.symptoms|length > 50 %}...{% endif %}</td>
+                                    <td>{{ appointment.referring_doctor or 'N/A' }}</td>
+
+                                    <td>
+                                        <span class="badge bg-{{ 'success' if appointment.status == 'completed' else 'warning' if appointment.status == 'pending' else 'info' if appointment.status == 'confirmed' else 'danger' }}">
+                                            {{ appointment.status|title }}
+                                        </span>
+                                    </td>
+                                    <td>{{ appointment.notes or 'No notes' }}</td>
+                                    <td>
+                                        {% if appointment.original_image %}
+                                        <a href="{{ url_for('original_image', original_id=appointment.prediction_id) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        {% else %}
+                                        <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if appointment.predicted_image %}
+                                        <a href="{{ url_for('predicted_image', predicted_id=appointment.prediction_id) }}" target="_blank" class="btn btn-sm btn-outline-success">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        {% else %}
+                                        <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('prediction_result', prediction_id=appointment.prediction_id) }}" target="_blank"
+                                        class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye me-1"></i>View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-3">
+                        <p class="text-muted">No upcoming appointments</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Past Appointments -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">My Past Appointments</h5>
+                </div>
+                <div class="card-body">
+                    {% set now_time = now() %}   {# current datetime #}
+                    {% set past_appointments = [] %}
+
+                    {% for appointment in appointments %}
+                        {# ensure appointment.appointment_datetime is a full datetime object #}
+                        {% if appointment.appointment_datetime < now_time %}
+                            {% set _ = past_appointments.append(appointment) %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if past_appointments %}
+                    {% set past_appointments = past_appointments|sort(attribute='appointment_datetime') %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Patient Name</th>
+                                    <th>Patient Age</th>
+                                    <th>Patient Gender</th>
+                                    <th>Disease Type</th>
+                                    <th>Result</th>
+
+                                    <!-- <th>Doctor Name</th>
+                                    <th>Doctor Specialization</th>
+                                    <th>Doctor Phone No</th>
+                                    <th>Doctor License Number</th>
+                                    <th>Doctor Experience</th> -->
+
+                                    <th>Symptoms</th>
+                                    <th>Referring Doctor</th>
+
+                                    <th>Status</th>
+                                    <th>Notes</th>
+                                    <th>Original Image</th>
+                                    <th>Predicted Image</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in past_appointments %}
+                                <tr>
+                                    <td>{{ appointment.appointment_datetime.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                                    <td>{{ appointment.patient_name }}</td>
+                                    <td>{{ appointment.patient_age }}</td>
+                                    <td>{{ appointment.patient_gender }}</td>
+                                    <td>{{ appointment.disease_type|title or 'N/A' }}</td>
+                                    <td>{{ appointment.prediction_result }}</td>
+
+
+                                    <!-- <td>{{ appointment.doctor_name }}</td>
+                                    <td>{{ appointment.specialization or 'General' }}</td>
+                                    <td>{{ appointment.doctor_phone or 'N/A' }}</td>
+                                    <td>{{ appointment.license_number or 'N/A' }}</td>
+                                    <td>{{ appointment.experience or 'N/A' }}</td> -->
+
+                                    <td>{{ appointment.symptoms[:50] }}{% if appointment.symptoms|length > 50 %}...{% endif %}</td>
+                                    <td>{{ appointment.referring_doctor or 'N/A' }}</td>
+
+                                    <td>
+                                        <span class="badge bg-success">Completed</span>
+                                    </td>
+                                    <td>{{ appointment.notes or 'No notes' }}</td>
+                                    <td>
+                                        {% if appointment.original_image %}
+                                        <a href="{{ url_for('original_image', original_id=appointment.prediction_id) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        {% else %}
+                                        <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if appointment.predicted_image %}
+                                        <a href="{{ url_for('predicted_image', predicted_id=appointment.prediction_id) }}" target="_blank" class="btn btn-sm btn-outline-success">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        {% else %}
+                                        <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('prediction_result', prediction_id=appointment.prediction_id) }}" target="_blank"
+                                        class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye me-1"></i>View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-3">
+                        <p class="text-muted">No past appointments</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}

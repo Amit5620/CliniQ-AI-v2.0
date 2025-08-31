@@ -1,0 +1,344 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - CliniQ AI v2.0{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" 
+      integrity="sha512-dyZ88n1rZJkXx3+Qk6m8VdKj3O6p6l5Y9l+6H5Z5b5m5Q5f5d5e5f5e5f5e5f5e" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h1 class="display-4 fw-bold mb-4" data-aos="fade-up">
+                    Get In <span class="text-warning">Touch</span>
+                </h1>
+                <p class="lead mb-4" data-aos="fade-up" data-aos-delay="200">
+                    Have questions about our AI-powered medical platform? We're here to help!
+                </p>
+                <div data-aos="fade-up" data-aos-delay="400">
+                    <a href="#contact-form" class="btn btn-primary btn-lg me-3">Send Message</a>
+                    <a href="#contact-info" class="btn btn-outline-light btn-lg">Contact Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Info Section -->
+<section id="contact-info" class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-4" data-aos="fade-up">
+                <div class="card h-100 text-center">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-map-marker-alt text-primary fs-1"></i>
+                        </div>
+                        <h5 class="card-title">Our Location</h5>
+                        <p class="card-text">
+                            123 Medical Innovation Park<br>
+                            Tech City, TC 560001<br>
+                            India
+                        </p>
+                        <a href="https://maps.google.com" target="_blank" class="btn btn-outline-primary">
+                            View on Map
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card h-100 text-center">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-phone text-success fs-1"></i>
+                        </div>
+                        <h5 class="card-title">Phone Support</h5>
+                        <p class="card-text">
+                            <strong>Admin:</strong> +91 9382731364<br>
+                            <strong>Support:</strong> +91 9876543210<br>
+                            <strong>Emergency:</strong> +91 9876543211<br>
+                            <strong>Business:</strong> +91 9876543212
+                        </p>
+                        <small class="text-muted">Available 24/7 for support</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card h-100 text-center">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-envelope text-warning fs-1"></i>
+                        </div>
+                        <h5 class="card-title">Email Support</h5>
+                        <p class="card-text">
+                            <strong>Support:</strong> support@cliniqai.com<br>
+                            <strong>Business:</strong> business@cliniqai.com<br>
+                            <strong>Careers:</strong> careers@cliniqai.com
+                        </p>
+                        <small class="text-muted">Response within 2 hours</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Form Section -->
+<section id="contact-form" class="py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="text-center mb-5" data-aos="fade-up">
+                    <h2 class="display-5 fw-bold">Send Us a Message</h2>
+                    <p class="lead">Fill out the form below and we'll get back to you within 24 hours</p>
+                </div>
+                
+                <div class="card shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card-body p-5">
+                        <form method="POST" action="{{ url_for('contact') }}">
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <label for="name" class="form-label fw-bold">Full Name *</label>
+                                    <input type="text" class="form-control form-control-lg" id="name" name="name" 
+                                           placeholder="Enter your full name" required>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label fw-bold">Email Address *</label>
+                                    <input type="email" class="form-control form-control-lg" id="email" name="email" 
+                                           placeholder="your.email@gmail.com" required>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <label for="subject" class="form-label fw-bold">Subject *</label>
+                                    <input type="text" class="form-control form-control-lg" id="subject" name="subject" 
+                                           placeholder="What's this about?" required>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <label for="message" class="form-label fw-bold">Message *</label>
+                                    <textarea class="form-control form-control-lg" id="message" name="message" 
+                                              rows="6" placeholder="Tell us more about your inquiry..." required></textarea>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="newsletter" name="newsletter">
+                                        <label class="form-check-label" for="newsletter">
+                                            Subscribe to our newsletter for updates and medical AI insights
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12 text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                                        <i class="fas fa-paper-plane me-2"></i>
+                                        Send Message
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="display-5 fw-bold">Frequently Asked Questions</h2>
+            <p class="lead">Find answers to common questions about our platform</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion" data-aos="fade-up" data-aos-delay="200">
+                    <div class="accordion-item mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq1">
+                                <strong>How accurate is your AI diagnosis?</strong>
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Our AI models achieve an accuracy rate of 99.7% across all supported disease types. 
+                                This is achieved through continuous training on millions of medical images and 
+                                validation by certified medical professionals.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq2">
+                                <strong>Is my medical data secure?</strong>
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Absolutely! We use end-to-end encryption, HIPAA-compliant storage, and follow 
+                                strict data protection protocols. Your medical information is never shared with 
+                                third parties without your explicit consent.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq3">
+                                <strong>What types of diseases can you detect?</strong>
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Currently, we support detection for ECG abnormalities, brain tumors, pneumonia, 
+                                and lung cancer. We're continuously expanding our capabilities to include more 
+                                disease types based on medical research and user feedback.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq4">
+                                <strong>How quickly will I get my results?</strong>
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Most AI analyses are completed within 30 seconds of image upload. 
+                                Complex cases may take up to 2 minutes. You'll receive an email notification 
+                                as soon as your results are ready.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq5">
+                                <strong>Do you offer support for doctors and hospitals?</strong>
+                            </button>
+                        </h2>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes! We provide specialized accounts for doctors and hospitals with features 
+                                like bulk processing, detailed analytics, and integration with existing 
+                                hospital management systems. Contact our business team for more details.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Business Hours Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card text-center" data-aos="fade-up">
+                    <div class="card-body p-5">
+                        <h4 class="card-title mb-4">Business Hours</h4>
+                        <div class="row">
+                            <div class="col-6">
+                                <h6 class="text-primary">Support Team</h6>
+                                <p class="mb-0">24/7 Available</p>
+                            </div>
+                            <div class="col-6">
+                                <h6 class="text-primary">Business Hours</h6>
+                                <p class="mb-0">Mon-Fri: 9AM-6PM</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <p class="text-muted">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Emergency support available 24/7 for critical medical cases
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Map Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="display-5 fw-bold">Find Us On Map</h2>
+            <p class="lead">Visit our office for a personalized consultation</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card-body p-0">
+                        <div style="height: 400px; overflow: hidden; border-radius: 15px;">
+                            <iframe 
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.123456789!2d77.5945627!3d12.9715987!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1670c9b44e6d%3A0xf8ddd3ff5e4f6f46!2sBangalore%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin"
+                                width="100%" 
+                                height="400" 
+                                style="border:0;" 
+                                allowfullscreen="" 
+                                loading="lazy" 
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Form validation
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const emailInput = document.getElementById('email');
+    
+    // Email validation
+    emailInput.addEventListener('blur', function() {
+        const email = this.value;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
+        if (!emailRegex.test(email)) {
+            this.classList.add('is-invalid');
+            this.setCustomValidity('Please enter a valid email address');
+        } else {
+            this.classList.remove('is-invalid');
+            this.setCustomValidity('');
+        }
+    });
+    
+    // Real-time character counter for message
+    const messageInput = document.getElementById('message');
+    const maxLength = 1000;
+    
+    messageInput.addEventListener('input', function() {
+        const currentLength = this.value.length;
+        if (currentLength > maxLength) {
+            this.value = this.value.substring(0, maxLength);
+        }
+    });
+});
+</script>
+{% endblock %}
