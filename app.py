@@ -1007,7 +1007,7 @@ def init_db():
         print("Database initialized successfully")
 
 # Initialize ML models on startup
-load_ml_models()
+# load_ml_models()
 
 if __name__ == '__main__':
     init_db()
